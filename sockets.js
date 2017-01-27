@@ -12,6 +12,7 @@ module.exports.listen = function (app) {
     // event on connection
     io.on('connection', function (socket) {
         console.log("Someone connected");
+
         socket.on('disconnect', function (socket) {
             console.log("Someone disconnected");
         })

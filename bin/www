@@ -4,16 +4,20 @@
  * Module dependencies.
  */
 
+var constants = require("../constants");
 var app = require('../app');
 var debug = require('debug')('sweapp-chatserver:server');
 var http = require('http');
+var db = require('../db/db');
+var io = require('../sockets');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || constants.PORT);
 app.set('port', port);
+
 
 /**
  * Create HTTP server.
@@ -24,9 +28,13 @@ var server = http.createServer(app);
 /**
  * Create Socket.io connector
  */
+var io = io.listen(server);
 
-var io = require('../sockets');
-io.listen(server);
+/**
+ * Create DB connection
+ */
+
+var dbInstance = db.startDB(io);
 
 /**
  * Listen on provided port, on all network interfaces.
