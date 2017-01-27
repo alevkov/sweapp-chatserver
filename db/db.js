@@ -5,7 +5,7 @@
 var constants = require("../constants");
 var mongoose = require('mongoose');
 
-module.exports.startDB = function () {
+module.exports.startDB = function (io) {
     /**
      * Set up remote db
      */
@@ -14,16 +14,18 @@ module.exports.startDB = function () {
         constants.DB_PWD +
         constants.DB_INSTANCE);
 
-
     /**
      * Open connection
      */
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
+        io.emit("dbOpen");
         console.log("Openned connection to " + constants.DB_INSTANCE);
         console.log("DB User:" + constants.DB_USER);
     });
+
+    return db;
 }
 
 
