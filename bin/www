@@ -4,16 +4,24 @@
  * Module dependencies.
  */
 
+var constants = require("../constants");
 var app = require('../app');
 var debug = require('debug')('sweapp-chatserver:server');
 var http = require('http');
+var db = require('../db/db');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || constants.PORT);
 app.set('port', port);
+
+/**
+ *  Connect to DB
+ */
+
+db.startDB();
 
 /**
  * Create HTTP server.
