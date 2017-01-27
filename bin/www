@@ -25,7 +25,8 @@ var server = http.createServer(app);
  * Create Socket.io connector
  */
 
-var io = require('socket.io')(server)
+var io = require('../sockets');
+io.listen(server);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -36,10 +37,6 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /* Socket io connection event */
-
-io.on('connection', function (socket) {
-    console.log("Someone connected")
-})
 
 
 /**
