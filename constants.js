@@ -18,3 +18,8 @@ define("DB_INSTANCE", "@ds133249.mlab.com:33249/swep-chat");
 /* server */
 define("HOST", "localhost");
 define("PORT", '3000');
+
+/* websockets Global Events */
+
+define("dbOpenEvent", "databaseConnectionOpenned");
+define("dbCloseEvent", "databaseConnectionClosed");

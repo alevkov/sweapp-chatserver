@@ -20,7 +20,7 @@ module.exports.startDB = function (io) {
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
-        io.emit("dbOpen");
+        io.emit(constants.dbOpenEvent);
         console.log("Openned connection to " + constants.DB_INSTANCE);
         console.log("DB User:" + constants.DB_USER);
     });
