@@ -30,6 +30,7 @@ router.post('/',function(req, res){
     user.times = times;
     user.year = year;
     user.contrib = contrib;
+    user.save();
 
     res.send(user);
 });
