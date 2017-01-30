@@ -22,6 +22,7 @@ var UserSchema = mongoose.Schema({
     password: String,
     email: String,
     courses: [String],
+    currentCourse: String,
     major: String,
     year: String,
     times: [
