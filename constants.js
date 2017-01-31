@@ -1,6 +1,3 @@
-/**
- * Created by lexlevi on 1/27/17.
- */
 function define(name, value) {
     Object.defineProperty(exports, name, {
         value:      value,
