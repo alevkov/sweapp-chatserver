@@ -5,18 +5,16 @@ function define(name, value) {
     });
 }
 
-/* db */
+// db
 define("DB_USER", "root");
 define("DB_PWD", "sandwhich");
 define("DB_PROTOCOL", "mongodb://");
 define("DB_INSTANCE", "@ds133249.mlab.com:33249/swep-chat");
 
-
-/* server */
+// server
 define("HOST", "localhost");
 define("PORT", '3000');
 
-/* websockets Global Events */
-
+// websockets global events
 define("dbOpenEvent", "databaseConnectionOpenned");
 define("dbCloseEvent", "databaseConnectionClosed");
