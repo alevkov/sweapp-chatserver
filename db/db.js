@@ -14,7 +14,16 @@ SALT_WORK_FACTOR = 10;
    SCHEMAS
  */
 
-// User Schema
+// Course
+
+var CourseSchema = mongoose.Schema({
+    name: String,
+    code: String,
+    professorName: String,
+    major: String
+});
+
+// User
 
 var UserSchema = mongoose.Schema({
     firstName: String,
@@ -22,14 +31,22 @@ var UserSchema = mongoose.Schema({
     userName: String,
     password: String,
     email: String,
-    courses: [String],
+    courses: [{type: mongoose.Schema.ObjectId, ref: 'Course'}],
     major: String,
     year: String,
-    times: [
-            {days: [String],
-            times:[Date]}
-            ],
+    days: [String],
     contribution: Number
+});
+
+// Group
+
+var GroupSchema = mongoose.Schema({
+    name: String,
+    participants: [{type: mongoose.Schema.ObjectId, ref: 'User'}],
+    course: {type: mongoose.Schema.ObjectId, ref: 'Course'},
+    term: String,
+    major: String,
+    days: [String]
 });
 
 UserSchema.pre('save', function(next) {
