@@ -20,7 +20,7 @@ var UserSchema = mongoose.Schema({
     userName: String,
     password: String,
     email: String,
-    courses: [{type: mongoose.Schema.ObjectId, ref: 'Course'}],
+    courses: [CourseSchema],
     major: String,
     year: String,
     days: [String],
@@ -30,8 +30,8 @@ var UserSchema = mongoose.Schema({
 // Group
 var GroupSchema = mongoose.Schema({
     name: String,
-    participants: [{type: mongoose.Schema.ObjectId, ref: 'User'}],
-    course: {type: mongoose.Schema.ObjectId, ref: 'Course'},
+    participants: [UserSchema],
+    course: CourseSchema,
     term: String,
     major: String,
     days: [String]
