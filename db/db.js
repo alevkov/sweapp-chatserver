@@ -4,8 +4,9 @@
 /* dependencies */
 var constants = require("../constants");
 var mongoose = require('mongoose');
-var instance;
 var bcrypt = require('bcrypt');
+
+var instance;
 
 SALT_WORK_FACTOR = 10;
 
@@ -22,7 +23,6 @@ var UserSchema = mongoose.Schema({
     password: String,
     email: String,
     courses: [String],
-    currentCourse: String,
     major: String,
     year: String,
     times: [
@@ -91,7 +91,3 @@ module.exports.disconnectDB = function () {
 module.exports.instance = function () {
     return instance;
 };
-
-
-
-
