@@ -16,7 +16,7 @@ module.exports.listen = function (app) {
         socket.on('disconnect', function (socket) {
             console.log("Someone disconnected");
         })
-    })
+    });
 
     return io
-}
+};
