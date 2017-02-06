@@ -33,7 +33,7 @@ var UserSchema = mongoose.Schema({
 });
 
 // Chat
-var ChatSchema = new Schema({
+var ChatSchema = new mongoose.Schema({
     sender : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User'
