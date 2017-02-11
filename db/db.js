@@ -8,7 +8,7 @@ SALT_WORK_FACTOR = 10;
 // Course
 var CourseSchema = mongoose.Schema({
     name: String,
-    code: String,
+    code: String
 });
 
 // User
