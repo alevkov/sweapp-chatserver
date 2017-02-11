@@ -79,11 +79,12 @@ var GroupSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Course'
         },
-    chat:
+    chats: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Chat'
-        },
+        }
+    ],
     term: String,
     major: String,
     days: [String]
