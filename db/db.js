@@ -24,6 +24,12 @@ var UserSchema = mongoose.Schema({
             ref: 'Course'
         }
     ],
+    groups: [
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref: 'Group'
+        }
+    ],
     major: String,
     year: String,
     days: [String],
