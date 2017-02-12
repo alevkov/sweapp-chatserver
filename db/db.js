@@ -18,12 +18,7 @@ var UserSchema = mongoose.Schema({
     userName: String,
     password: String,
     email: String,
-    courses: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Course'
-        }
-    ],
+    courses: [CourseSchema],
     groups: [
         {
             type:mongoose.Schema.Types.ObjectId,
@@ -80,11 +75,7 @@ var GroupSchema = mongoose.Schema({
             ref: 'User'
         }
     ],
-    course:
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Course'
-        },
+    course: CourseSchema,
     chats: [
         {
             type: mongoose.Schema.Types.ObjectId,
