@@ -118,7 +118,9 @@ module.exports.startDB = function (io) {
         console.log("DB User:" + constants.DB_USER);
         // Schema exports
         var User = mongoose.model('User', UserSchema);
+        var Course = mongoose.model('Course', CourseSchema);
         module.exports.User = User;
+        module.exports.Course = Course;
     });
     return db;
 };
