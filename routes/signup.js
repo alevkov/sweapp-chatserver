@@ -4,6 +4,7 @@ var db = require('../db/db');
 
 router.post('/',function(req, res){
     var user = new db.User();
+    var d = new Date();
     user.userName = req.body.userName;
     user.password = req.body.password;
     user.firstName = req.body.firstName;
@@ -14,6 +15,8 @@ router.post('/',function(req, res){
     user.days = req.body.days;
     user.year = req.body.year;
     user.contrib = req.body.contribution;
+    user.semester = req.body.semester;
+    user.academicYear = d.getFullYear();
     user.save();
     console.log("New User:");
     console.log("User name = " + user.email + ", password is " + user.password);

@@ -28,6 +28,8 @@ var UserSchema = mongoose.Schema({
     major: String,
     year: String,
     days: [String],
+    semester: String,
+    academicYear: Number,
     contribution: Number
 });
 
