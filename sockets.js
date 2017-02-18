@@ -1,25 +1,16 @@
-/**
- * Created by lexlevi on 1/26/17.
- */
-var www = require('./bin/www')
+var socketio = require('socket.io');
 
-/* Server reference */
-var server = www.server
-
-/**
- * Create Socket connector
- */
-
-var io = require('socket.io')(server)
-
-function socketEventListen() {
+// universal listen goes to www
+module.exports.listen = function (app) {
+    // get io instance based on server running
+    io = socketio(app);
+    // event on connection
     io.on('connection', function (socket) {
-        console.log("Someone connected")
-    })
+        console.log("Someone connected");
+        socket.on('disconnect', function (socket) {
+            console.log("Someone disconnected");
+        })
+    });
 
-    io.on('disconnect', function (socket) {
-        console.log("Someone disconnected")
-    })
-}
-
-module.exports = socketEventListen
+    return io
+};
