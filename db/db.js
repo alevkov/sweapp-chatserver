@@ -77,15 +77,20 @@ var GroupSchema = mongoose.Schema({
             ref: 'User'
         }
     ],
-    course: CourseSchema,
+    creator: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+    },
+    courses: [CourseSchema],
     chats: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Chat'
         }
     ],
-    term: String,
-    major: String,
+    semester: String,
+    academicYear: Number,
+    private: Boolean,
     days: [String]
 });
 
