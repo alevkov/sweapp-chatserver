@@ -90,7 +90,7 @@ var GroupSchema = mongoose.Schema({
     ],
     semester: String,
     academicYear: Number,
-    private: Boolean,
+    isPrivate: Boolean,
     days: [String]
 });
 
