@@ -35,37 +35,36 @@ var UserSchema = mongoose.Schema({
 
 // Chat
 var ChatSchema = new mongoose.Schema({
-    sender : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'User'
+    name: String,
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Group'
     },
-    messages : [
-        {
-            message : String,
-            meta : [
-                {
-                    user : {
-                        type : mongoose.Schema.Types.ObjectId,
-                        ref : 'User'
-                    },
-                    delivered : Boolean,
-                    read : Boolean
-                }
-            ]
-        }
-    ],
-    is_group_message : { type : Boolean, default : false },
+    isGroupMessage : { type : Boolean, default : false },
     participants : [
         {
-            user :  {
-                type : mongoose.Schema.Types.ObjectId,
-                ref : 'User'
-            },
-            delivered : Boolean,
-            read : Boolean,
-            last_seen : Date
+            type : mongoose.Schema.Types.ObjectId,
+            ref : 'User'
         }
     ]
+});
+
+// Message
+var MessageSchema = mongoose.Schema({
+   chat: {
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'Chat',
+       required: true
+   },
+   body: {
+       type: String
+   },
+   author: {
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'User'
+   }
+}, {
+    timestamps: true
 });
 
 // Group
@@ -126,8 +125,14 @@ module.exports.startDB = function (io) {
         // Schema exports
         var User = mongoose.model('User', UserSchema);
         var Course = mongoose.model('Course', CourseSchema);
+        var Group = mongoose.model('Group', GroupSchema);
+        var Chat = mongoose.model('Chat', ChatSchema);
+        var Message = mongoose.model('Message', MessageSchema);
         module.exports.User = User;
         module.exports.Course = Course;
+        module.exports.Group = Group;
+        module.exports.Chat = Chat;
+        module.exports.Message = Message;
     });
     return db;
 };

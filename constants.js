@@ -16,5 +16,8 @@ define("HOST", "localhost");
 define("PORT", '3000');
 
 // websockets global events
-define("dbOpenEvent", "databaseConnectionOpenned");
+define("dbOpenEvent", "databaseConnectionOpened");
 define("dbCloseEvent", "databaseConnectionClosed");
+
+// Chat
+define("general", "general");
