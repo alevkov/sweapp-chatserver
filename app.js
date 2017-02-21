@@ -12,6 +12,7 @@ var login = require('./routes/login');
 var signup = require('./routes/signup');
 var courses = require('./routes/courses');
 var groups = require('./routes/groups');
+var chats = require('./routes/chats');
 
 var app = express();
 
@@ -19,8 +20,6 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,6 +43,9 @@ app.use('/courses', courses);
 
 // Groups
 app.use('/groups', groups);
+
+// Chats
+app.use('/chats', chats);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -40,7 +40,7 @@ var ChatSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Group'
     },
-    isGroupMessage : { type : Boolean, default : false },
+    isGroupMessage : { type : Boolean, default : true },
     participants : [
         {
             type : mongoose.Schema.Types.ObjectId,
