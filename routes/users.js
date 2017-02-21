@@ -14,6 +14,16 @@ router.get('/', function(req, res, next) {
     });
 });
 
+// GET User for Id
+router.get('/:id', function (req, res) {
+    db.User.findOne({ '_id': ObjectId(req.params.id)}, function (err, user) {
+        if (err || user === null)
+            res.status(400).send({ error: "No User found for Id" });
+        else
+            res.status(200).send(user);
+    })
+});
+
 // POST to Login
 router.post('/login',function(req, res){
     var email = req.body.email;

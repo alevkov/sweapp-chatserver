@@ -4,6 +4,15 @@ var db = require('../db/db');
 var constants = require("../constants");
 var ObjectId = require('mongodb').ObjectId;
 
+// GET Group for Id
+router.get('/:id', function (req, res) {
+    db.Group.findOne({ '_id': ObjectId(req.params.id)}, function (err, group) {
+        if (err || group === null)
+            res.status(400).send({ error: "No Group found for Id" });
+        else
+            res.status(200).send(group);
+    })
+});
 
 // POST to create new Group for User
 router.post('/user/:id',function(req, res){
