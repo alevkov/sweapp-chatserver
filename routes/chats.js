@@ -4,12 +4,21 @@ var db = require('../db/db');
 var constants = require("../constants");
 var ObjectId = require('mongodb').ObjectId;
 
+// GET Chat for Id
+router.get('/:id', function (req, res) {
+    db.Chat.findOne({ '_id': ObjectId(req.params.id)}, function (err, chat) {
+        if (err || chat === null)
+            res.status(400).send({ error: "No Chat found for Id" });
+        else
+            res.status(200).send(chat);
+    })
+});
+
 // GET Chats for Group
 router.get('/:groupId', function (req, res) {
     db.Chat.find({ 'group': ObjectId(req.params.groupId) }, '_id', function (err, chats) {
-        if (err || chats === null || chats.length === 0) {
+        if (err || chats === null || chats.length === 0)
             res.status(400).send({ error: "No Chats in Group" });
-        }
         // array to hold conversations + most recent messages
         var fullChats = [];
         chats.forEach(function(chat) {
