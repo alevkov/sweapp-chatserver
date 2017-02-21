@@ -8,8 +8,6 @@ var bodyParser = require('body-parser');
 // routers
 var index = require('./routes/index');
 var users = require('./routes/users');
-var login = require('./routes/login');
-var signup = require('./routes/signup');
 var courses = require('./routes/courses');
 var groups = require('./routes/groups');
 var chats = require('./routes/chats');
@@ -32,11 +30,10 @@ app.use(require('node-sass-middleware')({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// User
 app.use('/', index);
+
+// User
 app.use('/users', users);
-app.use('/users/new', signup);
-app.use('/users/login', login);
 
 // Courses
 app.use('/courses', courses);
