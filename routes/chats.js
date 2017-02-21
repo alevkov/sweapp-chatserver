@@ -15,7 +15,7 @@ router.get('/:id', function (req, res) {
 });
 
 // GET Chats for Group
-router.get('/:groupId', function (req, res) {
+router.get('/group/:groupId', function (req, res) {
     db.Chat.find({ 'group': ObjectId(req.params.groupId) }, '_id', function (err, chats) {
         if (err || chats === null || chats.length === 0)
             res.status(400).send({ error: "No Chats in Group" });
@@ -46,7 +46,7 @@ router.get('/:groupId', function (req, res) {
 
 // GET Messages for Chat
 router.get('/:id/messages', function (req, res) {
-    db.Message.find({ 'chat': req.params.id }, 'createdAt body author')
+    db.Message.find({ 'chat': req.params.id }, 'createdAt body author chat')
         .sort('-createdAt')
         .populate({
             path: 'author',
@@ -60,7 +60,7 @@ router.get('/:id/messages', function (req, res) {
 });
 
 // POST new Chat in Group
-router.post('/:groupId', function (req, res) {
+router.post('/group/:groupId', function (req, res) {
     if (!req.body.user)
         res.status(422).send({ error: 'Please choose a valid recipient for your message.' });
     if (!req.body.message)
