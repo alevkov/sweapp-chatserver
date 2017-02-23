@@ -61,24 +61,25 @@ router.get('/:id/messages', function (req, res) {
 
 // POST new Chat in Group
 router.post('/group/:groupId', function (req, res) {
-    if (!req.body.user)
+    if (!req.user)
         res.status(422).send({ error: 'Please choose a valid recipient for your message.' });
-    if (!req.body.message)
+    if (!req.message)
         res.status(422).send({ error: 'Please enter a message.' });
     var chat = new db.Chat();
-    chat.participants = [req.body.user.id];
+    chat.participants = [req.user.id];
     for (p in req.body.participants) {
         chat.participants.push(ObjectId(p.id));
     }
     chat.isPrivate = req.body.isPrivate;
+    chat.name = req.body.name;
     chat.group = ObjectId(req.params.id);
     chat.save(function (err, newChat) {
         if (err)
             res.send({ error: err });
         var message = new db.Message();
         message.chat = newChat.id;
-        messaeg.body = req.body.message.body;
-        message.author = req.body.message.author;
+        messaeg.body = req.message.body;
+        message.author = req.message.author;
         message.save(function(err, newMessage) {
             if (err)
                 res.send({ error: err });
