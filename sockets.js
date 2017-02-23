@@ -1,13 +1,21 @@
 var socketio = require('socket.io');
+var constants = require('./constants');
 
 // universal listen goes to www
 module.exports.listen = function (app) {
-    // get io instance based on server running
     io = socketio(app);
-    // event on connection
-    io.on('connection', function (socket) {
+    io.on(constants.ioConnection, function (socket) {
         console.log("Someone connected");
-        socket.on('disconnect', function (socket) {
+        socket.on(constants.ioEnterChannel, function (channel) {
+            socket.join(channel);
+        });
+        socket.on(constants.ioLeaveChannel, function (channel) {
+            socket.leave(channel);
+        });
+        socket.on(constants.ioNewMessages, function (channel) {
+            io.sockets.in(channel).emit(constants.ioRefreshMessages, channel);
+        });
+        socket.on(constants.ioDisconnect, function () {
             console.log("Someone disconnected");
         })
     });
