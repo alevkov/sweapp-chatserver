@@ -59,7 +59,7 @@ router.post('/new',function(req, res){
     user.major = req.body.major;
     user.days = req.body.days;
     user.year = req.body.year;
-    user.contrib = 1;
+    user.contribution = 1;
     user.semester = req.body.semester;
     user.academicYear = d.getFullYear();
     user.save(function (err, user) {
