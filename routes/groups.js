@@ -10,7 +10,10 @@ router.get('/:id', function (req, res) {
         if (err || group === null)
             res.status(400).send({ error: "No Group found for Id" });
         else
+        {
             res.status(200).send(group);
+        }
+
     })
 });
 
@@ -46,6 +49,32 @@ router.post('/user/:id',function(req, res){
             res.status(200).send(group);
         }
     });
+});
+
+// PATCH Group by id
+router.patch('/:id', function(req, res) {
+    db.Group.findOne({ '_id': ObjectId(req.params.id)}, function (err, group) {
+        if (err || group === null)
+            res.status(400).send({ error: "No Group found for Id" });
+        else {
+            group.name = req.body.name;
+            group.participants = req.body.participants;
+            group.courses = req.body.courses;
+            group.chats = req.body.chats;
+            group.semester = req.body.semester;
+            group.academicYear = req.body.academicYear;
+            group.isPrivate = req.body.isPrivate;
+            group.days = req.body.days;
+            group.save(function (err, group) {
+                if (err || group === null)
+                    console.log(err);
+                else {
+                    console.log(group);
+                    res.status(200).send(group);
+                }
+            });
+        }
+    })
 });
 
 // GET all groups for User
