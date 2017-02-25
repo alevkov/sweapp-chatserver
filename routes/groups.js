@@ -10,10 +10,7 @@ router.get('/:id', function (req, res) {
         if (err || group === null)
             res.status(400).send({ error: "No Group found for Id" });
         else
-        {
             res.status(200).send(group);
-        }
-
     })
 });
 
@@ -53,7 +50,7 @@ router.post('/user/:id',function(req, res){
 
 // PATCH Group by id
 router.patch('/:id', function(req, res) {
-    db.Group.findOne({ '_id': ObjectId(req.params.id)}, function (err, group) {
+    db.Group.findOne({ '_id': ObjectId(req.params.id) }, function (err, group) {
         if (err || group === null)
             res.status(400).send({ error: "No Group found for Id" });
         else {
@@ -67,12 +64,16 @@ router.patch('/:id', function(req, res) {
             group.days = req.body.days;
             group.save(function (err, group) {
                 if (err || group === null)
-                    res.status(500).send({error:"Error saving group"});
+                    res.status(500).send({ error:"Error saving group" });
                 else
                     res.status(200).send(group);
             });
         }
     })
+});
+
+router.delete('/:id', function (req, res) {
+   db.Group.remove({ '_id': ObjectId(req.params.id) });
 });
 
 // GET all groups for User
