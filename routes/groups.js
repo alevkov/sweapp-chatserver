@@ -67,11 +67,9 @@ router.patch('/:id', function(req, res) {
             group.days = req.body.days;
             group.save(function (err, group) {
                 if (err || group === null)
-                    console.log(err);
-                else {
-                    console.log(group);
+                    res.status(500).send({error:"Error saving group"});
+                else
                     res.status(200).send(group);
-                }
             });
         }
     })
