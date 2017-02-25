@@ -24,6 +24,7 @@ define("ioLeaveChannel", "leaveChannel");
 define("ioNewMessage", "newMessage");
 define("ioRefreshMessages", "refreshMessages");
 define("ioDisconnect", "disconnect");
+define("ioTyping", "typing");
 
 // Chat
 define("general", "general");

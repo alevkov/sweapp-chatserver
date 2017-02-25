@@ -17,6 +17,9 @@ module.exports.listen = function (app) {
         });
         socket.on(constants.ioDisconnect, function () {
             console.log("Someone disconnected");
+        });
+        socket.on(constants.ioTyping, function (user) {
+            console.log("Someone is typing");
         })
     });
 
