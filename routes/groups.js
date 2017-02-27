@@ -64,7 +64,7 @@ router.patch('/:id', function(req, res) {
             group.days = req.body.days;
             group.save(function (err, group) {
                 if (err || group === null)
-                    res.status(500).send({ error:"Error saving group" });
+                    res.status(500).send({ error: "Error saving group" });
                 else
                     res.status(200).send(group);
             });
@@ -73,7 +73,14 @@ router.patch('/:id', function(req, res) {
 });
 
 router.delete('/:id', function (req, res) {
-   db.Group.remove({ '_id': ObjectId(req.params.id) });
+   db.Group.findOne({ '_id': req.params.id }, function (err, group) {
+       if (err || group === null)
+           res.status(404).send({ error: "Can't delete non-existent group" });
+       else {
+           group.remove();
+           res.status(200).send({ success: "Group deleted" });
+       }
+   });
 });
 
 // GET all groups for User

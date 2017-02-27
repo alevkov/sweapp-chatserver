@@ -93,6 +93,7 @@ var GroupSchema = mongoose.Schema({
     days: [String]
 });
 
+// User middleware
 UserSchema.pre('save', function(next) {
     var user = this;
     // only hash the password if it has been modified (or is new)
@@ -107,6 +108,34 @@ UserSchema.pre('save', function(next) {
             user.password = hash;
             next();
         });
+    });
+});
+
+// Group middleware
+GroupSchema.pre('remove', function (next) {
+    var group = this;
+    var UserModel = mongoose.model('User', UserSchema);
+    var ChatModel = mongoose.model('Chat', ChatSchema);
+    // remove each chat for deleted group
+    ChatModel.find({ 'group': group.id }, function (err,chats) {
+        if (err || chats === null)
+            next();
+        for (var i = 0; i < chats.length; i++)
+            chats[i].remove();
+    });
+    // remove group ref from participants
+    UserModel.find({
+        '_id': { $in: group.participants }
+    }, function(err, users){
+        if (err) return next(er);
+        for (var j = 0; j < users.length; j++) {
+            for (var i = 0; i < users[j].groups.length; i++) {
+                if (users[j].groups[i] == group.id)
+                    users[j].groups.splice(i, 1);
+            }
+            users[j].save();
+            next();
+        }
     });
 });
 
