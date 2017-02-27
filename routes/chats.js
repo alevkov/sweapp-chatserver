@@ -55,8 +55,14 @@ router.get('/:id/messages', function (req, res) {
         }).exec(function (err, messages) {
             if (err || messages === null || messages.length === 0)
                 res.status(404).send({ error: "No Messages Found for Channel" });
-            else
-                res.status(200).send(encryption.decrypt(messages));
+            else {
+                for (var message in messages) {
+                    message.body = encryption.decrypt(message.body);
+                    console.log(message.body);
+                }
+
+                res.status(200).send(messages);
+            }
     });
 });
 
