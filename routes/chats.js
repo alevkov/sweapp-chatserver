@@ -3,6 +3,7 @@ var router = express.Router();
 var db = require('../db/db');
 var constants = require("../constants");
 var ObjectId = require('mongodb').ObjectId;
+var encryption = require("../encryption");
 
 // GET Chat for Id
 router.get('/:id', function (req, res) {
@@ -53,9 +54,9 @@ router.get('/:id/messages', function (req, res) {
             select: 'firstName lastName userName'
         }).exec(function (err, messages) {
             if (err || messages === null || messages.length === 0)
-                res.status(404).send({ error: "Not Messages Found for Channel" });
+                res.status(404).send({ error: "No Messages Found for Channel" });
             else
-                res.status(200).send(messages);
+                res.status(200).send(encryption.decrypt(messages));
     });
 });
 
@@ -94,7 +95,7 @@ router.post('/group/:groupId', function (req, res) {
 router.post('/:id/message/new', function (req, res) {
     var reply = new db.Message();
     reply.chat = ObjectId(req.params.id);
-    reply.body = req.body.body;
+    reply.body = encryption.encrypt(req.body.body);
     reply.author = req.body.author;
     reply.save(function(err, sentReply) {
         if (err)
