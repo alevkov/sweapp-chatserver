@@ -48,6 +48,41 @@ router.post('/user/:id',function(req, res){
     });
 });
 
+// PATCH Group by id
+router.patch('/:id', function(req, res) {
+    db.Group.findOne({ '_id': ObjectId(req.params.id) }, function (err, group) {
+        if (err || group === null)
+            res.status(400).send({ error: "No Group found for Id" });
+        else {
+            group.name = req.body.name;
+            group.participants = req.body.participants;
+            group.courses = req.body.courses;
+            group.chats = req.body.chats;
+            group.semester = req.body.semester;
+            group.academicYear = req.body.academicYear;
+            group.isPrivate = req.body.isPrivate;
+            group.days = req.body.days;
+            group.save(function (err, group) {
+                if (err || group === null)
+                    res.status(500).send({ error: "Error saving group" });
+                else
+                    res.status(200).send(group);
+            });
+        }
+    })
+});
+
+router.delete('/:id', function (req, res) {
+   db.Group.findOne({ '_id': req.params.id }, function (err, group) {
+       if (err || group === null)
+           res.status(404).send({ error: "Can't delete non-existent group" });
+       else {
+           group.remove();
+           res.status(200).send({ success: "Group deleted" });
+       }
+   });
+});
+
 // GET all groups for User
 router.get('/user/:id', function (req, res) {
     db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
