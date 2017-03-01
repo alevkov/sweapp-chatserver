@@ -75,7 +75,7 @@ router.post('/new',function(req, res){
 
 // DELETE User with Id
 router.delete('/:id', function (req, res) {
-    db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
+    db.User.findOne({ '_id': req.params.id }, function (err, user) {
         if (err || user === null)
             res.status(500).send({ error: "User not found" });
         else {
