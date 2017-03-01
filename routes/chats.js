@@ -66,7 +66,7 @@ router.get('/:id/messages', function (req, res) {
 // POST new Chat in Group
 router.post('/group/:groupId', function (req, res) {
     if (!req.user)
-        res.status(422).send({ error: 'Please choose a valid recipient for your message.' });
+        res.status(422).send({ error: 'Please choose a valid recipient for your message' });
     if (!req.message)
         res.status(422).send({ error: 'Please enter a message.' });
     var chat = new db.Chat();

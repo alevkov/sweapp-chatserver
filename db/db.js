@@ -126,7 +126,7 @@ UserSchema.pre('remove', function (next) {
                     }
                 }
                 groups[i].save();
-                return next();
+                next();
             }
         }
     })
@@ -158,7 +158,7 @@ GroupSchema.pre('remove', function (next) {
                         users[i].groups.splice(j, 1);
                 }
                 users[i].save();
-                return next();
+                next();
             }
         }
 

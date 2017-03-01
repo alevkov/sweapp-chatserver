@@ -7,8 +7,8 @@ router.get('/', function(req, res, next) {
         if (err || courses === null) {
             res.status(404);
             res.send({"error": "No courses found"});
-        }
-        res.send(courses);
+        } else
+            res.send(courses);
     });
 });
 

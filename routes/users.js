@@ -73,6 +73,18 @@ router.post('/new',function(req, res){
     });
 });
 
+// DELETE User with Id
+router.delete('/:id', function (req, res) {
+    db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
+        if (err || user === null)
+            res.status(500).send({ error: "User not found" });
+        else {
+            user.remove();
+            return res.status(200).send({ success: user });
+        }
+    });
+});
+
 // GET Groups for User
 router.get('/:id/groups', function(req, res, next) {
     db.User.findOne( { '_id': ObjectId(req.params.id) }, function (err, user) {
