@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
     });
 });
 
-// GET User for Id
+// GET User by id
 router.get('/:id', function (req, res) {
     db.User.findOne({ '_id': ObjectId(req.params.id)}, function (err, user) {
         if (err || user === null)
@@ -68,7 +68,37 @@ router.post('/new',function(req, res){
         } else {
             console.log("New User:");
             console.log("User name = " + user.email + ", password is " + user.password);
-            res.send(user);
+            res.status(200).send(user);
+        }
+    });
+});
+
+// PATCH User by id
+router.patch('/:id', function(req, res) {
+    db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
+        if (err || user === null)
+            res.status(400).send({ error: "No User found for Id" });
+        else {
+            var updatedUser = req.body;
+            var id = req.params.id;
+            db.User.update({_id  : ObjectId(id)}, {$set: updatedUser}, function (err, user) {
+                if (err || user === null)
+                    res.status(500).send({ error: "Error saving User" });
+                else
+                    res.status(200).send(user);
+            });
+        }
+    })
+});
+
+// DELETE User with Id
+router.delete('/:id', function (req, res) {
+    db.User.findOne({ '_id': req.params.id }, function (err, user) {
+        if (err || user === null)
+            res.status(500).send({ error: "User not found" });
+        else {
+            user.remove();
+            return res.status(200).send({ success: user });
         }
     });
 });

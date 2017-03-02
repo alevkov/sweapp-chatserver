@@ -111,8 +111,28 @@ UserSchema.pre('save', function(next) {
     });
 });
 
+UserSchema.post('remove', function (next) {
+    var user = this;
+    var GroupModel = mongoose.model('Group', GroupSchema);
+    GroupModel.find({
+        '_id': { $in: user.groups }
+    }, function (err, groups) {
+        if(err || groups === null) return next(err);
+        else {
+            for (var i = 0; i < groups.length; i++) {
+                for (var j = 0; j < groups[i].participants.length; j++) {
+                    if (groups[i].participants[j] == user.id) {
+                        groups[i].participants.splice(j, 1);
+                    }
+                }
+                groups[i].save();
+            }
+        }
+    })
+});
+
 // Group middleware
-GroupSchema.pre('remove', function (next) {
+GroupSchema.post('remove', function (next) {
     var group = this;
     var UserModel = mongoose.model('User', UserSchema);
     var ChatModel = mongoose.model('Chat', ChatSchema);
@@ -120,22 +140,26 @@ GroupSchema.pre('remove', function (next) {
     ChatModel.find({ 'group': group.id }, function (err,chats) {
         if (err || chats === null)
             next();
-        for (var i = 0; i < chats.length; i++)
-            chats[i].remove();
+        else {
+            for (var i = 0; i < chats.length; i++)
+                chats[i].remove();
+        }
     });
     // remove group ref from participants
     UserModel.find({
         '_id': { $in: group.participants }
     }, function(err, users){
-        if (err) return next(er);
-        for (var j = 0; j < users.length; j++) {
-            for (var i = 0; i < users[j].groups.length; i++) {
-                if (users[j].groups[i] == group.id)
-                    users[j].groups.splice(i, 1);
+        if (err || users === null) return next(err);
+        else {
+            for (var i = 0; i < users.length; i++) {
+                for (var j = 0; j < users[i].groups.length; j++) {
+                    if (users[i].groups[j] == group.id)
+                        users[i].groups.splice(j, 1);
+                }
+                users[i].save();
             }
-            users[j].save();
-            next();
         }
+
     });
 });
 
