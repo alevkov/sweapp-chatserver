@@ -15,9 +15,16 @@ define("DB_INSTANCE", "@ds133249.mlab.com:33249/swep-chat");
 define("HOST", "localhost");
 define("PORT", '3000');
 
-// websockets global events
+// socket events
 define("dbOpenEvent", "databaseConnectionOpened");
 define("dbCloseEvent", "databaseConnectionClosed");
+define("ioConnection", "connection");
+define("ioEnterChannel", "enterChannel");
+define("ioLeaveChannel", "leaveChannel");
+define("ioNewMessage", "newMessage");
+define("ioRefreshMessages", "refreshMessages");
+define("ioDisconnect", "disconnect");
+define("ioTyping", "typing");
 
 // Chat
 define("general", "general");
