@@ -111,7 +111,7 @@ UserSchema.pre('save', function(next) {
     });
 });
 
-UserSchema.pre('remove', function (next) {
+UserSchema.post('remove', function (next) {
     var user = this;
     var GroupModel = mongoose.model('Group', GroupSchema);
     GroupModel.find({
@@ -126,14 +126,13 @@ UserSchema.pre('remove', function (next) {
                     }
                 }
                 groups[i].save();
-                next();
             }
         }
     })
 });
 
 // Group middleware
-GroupSchema.pre('remove', function (next) {
+GroupSchema.post('remove', function (next) {
     var group = this;
     var UserModel = mongoose.model('User', UserSchema);
     var ChatModel = mongoose.model('Chat', ChatSchema);
@@ -158,7 +157,6 @@ GroupSchema.pre('remove', function (next) {
                         users[i].groups.splice(j, 1);
                 }
                 users[i].save();
-                next();
             }
         }
 
