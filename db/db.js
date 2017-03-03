@@ -159,7 +159,20 @@ GroupSchema.post('remove', function (next) {
                 users[i].save();
             }
         }
+    });
+});
 
+//Chat middleware
+ChatSchema.post('remove', function (next) {
+    var chat = this;
+    var GroupModel = mongoose.model('Group', GroupSchema);
+    GroupModel.findOne({ '_id': chat.group }, function (err, group) {
+        if (err || group === null) return next(err);
+        for (var i = 0; i < group.chats.length; i++) {
+            if (group.chats[i] == chat.id)
+                group.chats.splice(i, 1);
+        }
+        group.save();
     });
 });
 

@@ -94,6 +94,36 @@ router.post('/group/:groupId', function (req, res) {
     })
 });
 
+// PATCH Chat by id
+router.patch('/:id', function(req, res) {
+    db.Chat.findOne({ '_id': ObjectId(req.params.id) }, function (err, chat) {
+        if (err || chat === null)
+            res.status(400).send({ error: "No Chat found for Id" });
+        else {
+            var updatedChat = req.body;
+            var id = req.params.id;
+            db.Chat.update({_id  : ObjectId(id)}, {$set: updatedChat}, function (err, chat) {
+                if (err || chat === null)
+                    res.status(500).send({ error: "Error saving Chat" });
+                else
+                    res.status(200).send(chat);
+            });
+        }
+    })
+});
+
+// DELETE Chat by id
+router.delete('/:id', function (req, res) {
+    db.Chat.findOne({ '_id': req.params.id }, function (err, chat) {
+        if (err || chat === null)
+            res.status(404).send({ error: "Chat not found" });
+        else {
+            chat.remove();
+            res.status(200).send({ success: "Chat deleted" });
+        }
+    });
+});
+
 // POST new Message to Chat
 router.post('/:id/message/new', function (req, res) {
     var reply = new db.Message();
