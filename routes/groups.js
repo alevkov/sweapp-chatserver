@@ -31,6 +31,7 @@ router.post('/user/:id',function(req, res){
             generalChannel.save();
             // Group created
             group.name = req.body.name;
+            group.desc = req.body.description;
             group.creator = user.id;
             group.participants.push(user.id);
             group.courses = req.body.courses;
