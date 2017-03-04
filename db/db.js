@@ -70,6 +70,7 @@ var MessageSchema = mongoose.Schema({
 // Group
 var GroupSchema = mongoose.Schema({
     name: String,
+    desc: String,
     participants: [
         {
             type: mongoose.Schema.Types.ObjectId,
