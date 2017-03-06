@@ -79,7 +79,7 @@ router.delete('/:id', function (req, res) {
    });
 });
 
-// GET all groups for User
+// GET all Groups for User
 router.get('/user/:id', function (req, res) {
     db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
         if (err || user === null) {
@@ -98,7 +98,7 @@ router.get('/user/:id', function (req, res) {
     });
 });
 
-// GET all Users for Group
+// GET Participants (Users) for Group
 router.get('/:id/users', function (req,res) {
    db.Group.findOne({ '_id': ObjectId(req.params.id) }, function (err, group) {
        if (err || group === null) {

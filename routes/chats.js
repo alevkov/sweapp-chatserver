@@ -17,31 +17,11 @@ router.get('/:id', function (req, res) {
 
 // GET Chats for Group
 router.get('/group/:groupId', function (req, res) {
-    db.Chat.find({ 'group': ObjectId(req.params.groupId) }, '_id', function (err, chats) {
+    db.Chat.find({ 'group': ObjectId(req.params.groupId) }, function (err, chats) {
         if (err || chats === null || chats.length === 0)
             res.status(400).send({ error: "No Chats in Group" });
-        // array to hold conversations + most recent messages
-        var fullChats = [];
-        chats.forEach(function(chat) {
-            db.Message.find({ 'chat': chat.id })
-                .sort('-createdAt')
-                .limit(1)
-                .populate({
-                    path: 'author',
-                    select: "firstName lastName userName"
-                })
-                .exec(function (err, message) {
-                    if (err)
-                        res.status(400).send({ error: "No Messages in Chat" });
-                    else {
-                        fullChats.push(message);
-                        if (fullChats.length === chats.length) {
-                            return res.status(200).json({ conversations: fullChats });
-                        }
-                    }
-                })
-        })
-
+        else
+            res.status(200).send(chats);
     });
 });
 
@@ -63,8 +43,26 @@ router.get('/:id/messages', function (req, res) {
     });
 });
 
+// GET Participants (Users) for Chat
+router.get('/:id/users', function (req, res) {
+    db.Chat.findOne({ '_id': ObjectId(req.params.id) }, function (err, chat) {
+        if (chat == null || err)
+            res.status(400).send({ error: 'No Chat found for Id' });
+        else {
+            db.User.find({
+                '_id': { $in: chat.participants }
+            }, function (err, users) {
+                if (err || users === null || users.length === 0)
+                    res.status(400).send([]);
+                else
+                    res.status(200).send(users);
+            });
+        }
+    });
+});
+
 // POST new Chat in Group
-router.post('/group/:groupId', function (req, res) {
+router.post('/group/:groupId/new', function (req, res) {
     if (!req.user)
         res.status(422).send({ error: 'Please choose a valid recipient for your message' });
     if (!req.message)
@@ -95,7 +93,7 @@ router.post('/group/:groupId', function (req, res) {
 });
 
 // PATCH Chat by id
-router.patch('/:id', function(req, res) {
+router.patch('/:id/update', function(req, res) {
     db.Chat.findOne({ '_id': ObjectId(req.params.id) }, function (err, chat) {
         if (err || chat === null)
             res.status(400).send({ error: "No Chat found for Id" });
@@ -113,7 +111,7 @@ router.patch('/:id', function(req, res) {
 });
 
 // DELETE Chat by id
-router.delete('/:id', function (req, res) {
+router.delete('/:id/delete', function (req, res) {
     db.Chat.findOne({ '_id': req.params.id }, function (err, chat) {
         if (err || chat === null)
             res.status(404).send({ error: "Chat not found" });
@@ -125,7 +123,7 @@ router.delete('/:id', function (req, res) {
 });
 
 // POST new Message to Chat
-router.post('/:id/message/new', function (req, res) {
+router.post('/:id/messages/new', function (req, res) {
     var reply = new db.Message();
     reply.chat = ObjectId(req.params.id);
     reply.body = encryption.encrypt(req.body.body);
