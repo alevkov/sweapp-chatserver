@@ -4,12 +4,21 @@ var db = require('./db/db');
 var ObjectId = require('mongodb').ObjectId;
 var encryption = require("./encryption");
 
+var users = {};
+var clients = [];
 
 // universal listen goes to www
 module.exports.listen = function (app) {
     io = socketio(app);
     io.on(constants.ioConnection, function (socket) {
         console.log(socket.id + " connected");
+        socket.on(constants.ioUserJoined, function (user) {
+            console.log(JSON.parse(user));
+            users[socket.id] = JSON.parse(user);
+            io.sockets.emit(constants.ioUpdateJoin, users[socket.id]);
+            io.sockets.emit(constants.ioUpdateUsers, users);
+            clients.push(socket);
+        });
         socket.on(constants.ioEnterChannel, function (channel) {
             console.log(socket.id + " joined channel " + channel);
             socket.join(channel);
@@ -26,7 +35,7 @@ module.exports.listen = function (app) {
             reply.author = m.author._id;
             reply.save(function(err, sentReply) {
                 if (err)
-                    res.send({ error: err });
+                    console.log(err);
                 else
                     io.sockets.in(channel).emit(constants.ioNewMessage, message);
             });
