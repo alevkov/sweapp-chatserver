@@ -83,8 +83,7 @@ router.delete('/:id', function (req, res) {
 router.get('/user/:id', function (req, res) {
     db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
         if (err || user === null) {
-            res.status(404);
-            res.send({ error: "User not found" });
+            res.status(404).send({ error: "User not found" });
         } else {
             db.Group.find({
                 '_id': { $in: user.groups }
@@ -99,11 +98,10 @@ router.get('/user/:id', function (req, res) {
 });
 
 // GET Participants (Users) for Group
-router.get('/:id/users', function (req,res) {
+router.get('/:id/users', function (req, res) {
    db.Group.findOne({ '_id': ObjectId(req.params.id) }, function (err, group) {
        if (err || group === null) {
-           res.status(400);
-           res.send({ error: "Group not found" });
+           res.status(400).send({ error: "Group not found" });
        } else {
            db.User.find({
                '_id': { $in: group.participants }
@@ -115,6 +113,40 @@ router.get('/:id/users', function (req,res) {
            });
        }
    })
+});
+
+// POST New User for Group (add User to Group)
+router.post('/:id/users/new', function (req, res) {
+    db.Group.findOne({ '_id': req.params.id }, function (err, group) {
+        if (err || group === null)
+            res.status(400).send({ error: "Group not found" });
+        else  {
+            db.User.findOne({
+                '_id': req.body.id
+            }, function (err, user) {
+                if (err || user === null)
+                    res.status(400).send({ error: "User not found "});
+                else {
+                    group.participants.push(user.id);
+                    user.groups.push(group.id);
+                    group.save();
+                    user.save();
+                    db.Chat.findOne({
+                        'group': ObjectId(group.id),
+                        'name': constants.general
+                    }, function (err, chat) {
+                        if (err || chat === null)
+                            res.status(400).send({ error: "Group is missing general! "});
+                        else {
+                            chat.participants.push(user.id);
+                            chat.save();
+                            res.status(200).send(user);
+                        }
+                    });
+                }
+            });
+        }
+    });
 });
 
 module.exports = router;
