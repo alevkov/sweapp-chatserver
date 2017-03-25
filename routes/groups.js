@@ -23,12 +23,18 @@ router.post('/user/:id',function(req, res){
             // list of group id's
             var group = new db.Group;
             var generalChannel = new db.Chat;
+            var selfDirectChannel = new db.Chat;
             // General channel
             generalChannel.name = constants.general;
             generalChannel.group = group.id;
             generalChannel.isGroupMessage = true;
             generalChannel.participants.push(user.id);
             generalChannel.save();
+            // A direct channel where the User is the only participant
+            selfDirectChannel.group = group.id;
+            selfDirectChannel.isGroupMessage = false;
+            selfDirectChannel.participants.push(user.id);
+            selfDirectChannel.save();
             // Group created
             group.name = req.body.name;
             group.desc = req.body.desc;
@@ -36,6 +42,7 @@ router.post('/user/:id',function(req, res){
             group.participants.push(user.id);
             group.courses = req.body.courses;
             group.chats.push(generalChannel.id);
+            group.chats.push(selfDirectChannel.id);
             group.semester = req.body.semester;
             group.academicYear = req.body.academicYear;
             group.isPrivate = req.body.isPrivate;
@@ -129,6 +136,11 @@ router.post('/:id/users/new', function (req, res) {
                 else {
                     group.participants.push(user.id);
                     user.groups.push(group.id);
+                    var selfDirectChannel = new db.Chat;
+                    selfDirectChannel.group = group.id;
+                    selfDirectChannel.isGroupMessage = false;
+                    selfDirectChannel.participants.push(user.id);
+                    selfDirectChannel.save();
                     group.save();
                     user.save();
                     db.Chat.findOne({
