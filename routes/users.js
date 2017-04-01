@@ -3,6 +3,7 @@ var router = express.Router();
 var db = require('../db/db');
 var bcrypt = require('bcrypt');
 var ObjectId = require('mongodb').ObjectId;
+var _ = require('underscore');
 
 // GET all Users
 router.get('/', function(req, res, next) {
@@ -105,7 +106,7 @@ router.delete('/:id', function (req, res) {
 
 // GET Groups for User
 router.get('/:id/groups', function(req, res, next) {
-    db.User.findOne( { '_id': ObjectId(req.params.id) }, function (err, user) {
+    db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
         if (err || user === null)
             res.status(404).send({ error: "User not found" });
         else {
@@ -116,8 +117,71 @@ router.get('/:id/groups', function(req, res, next) {
                     res.status(404).send({ error: "User has no Groups" });
                 else
                     res.status(200).send(groups);
-
             });
+        }
+    });
+});
+
+// GET Matching Users for User
+router.get('/:id/match', function (req, res) {
+    db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
+        if (err || user === null)
+            res.status(404).send({ error: "User not found" });
+        else {
+            db.User.aggregate( // match by сourses
+                { $match: { courses: { $in: user.courses } } } ,
+                { $unwind: "$courses" },
+                { $match: { courses: { $in: user.courses } } },
+                { $group: {
+                    _id: "$_id",
+                    matches:{ $sum: 1 }
+                } },
+                { $sort:{ matches: -1 } }, function (err, matches) {
+                    if (err || matches === null || matches.length === 0)
+                        res.status(404).send({ error: "No Matches Found "});
+                    else {
+                        var matchedIds = [];
+                        // remove current user's id
+                        for (var i = 0; i < matches.length; i++) {
+                            if (matches[i]._id.equals(user._id))
+                                matches.splice(i, 1);
+                        }
+                        // push to id's array
+                        for (var j = 0; j < matches.length; j++) {
+                           if (!matches[j]._id.equals(user._id))
+                                matchedIds.push(matches[j]._id);
+                        }
+                        // find matching users
+                        db.User.find({
+                            _id: { $in: matchedIds }
+                        }).exec(function (err, users) {
+                            // sort users by matching courses
+                            // might not be the most efficient approach?
+                            users.sort(function (a, b) {
+                                return _.findIndex(matchedIds, function (id) { return a._id.equals(id); }) -
+                                    _.findIndex(matchedIds, function (id) { return b._id.equals(id); });
+                            });
+                            var matchArray = [];
+                            // bring matching majors to front if number of courses matching is the same
+                            for (var k = 0; k < matches.length - 1; k++) {
+
+                                if (matches[k].matches == matches[k + 1].matches &&
+                                    users[k + 1].major === user.major) {
+                                        var t = users[k];
+                                        users[k] = users[k + 1];
+                                        users[k + 1] = t;
+                                }
+                            }
+                            for (var l = 0; l < users.length; l++) {
+                                var result = {}; // holds users with matches key
+                                result['user'] = users[l];
+                                result['matches'] = matches[l]["matches"];
+                                matchArray.push(result);
+                            }
+                            res.status(200).send(matchArray);
+                        })
+                    }
+                });
         }
     });
 });
