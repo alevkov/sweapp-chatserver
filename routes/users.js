@@ -164,7 +164,6 @@ router.get('/:id/match', function (req, res) {
                             var matchArray = [];
                             // bring matching majors to front if number of courses matching is the same
                             for (var k = 0; k < matches.length - 1; k++) {
-
                                 if (matches[k].matches == matches[k + 1].matches &&
                                     users[k + 1].major === user.major) {
                                         var t = users[k];
