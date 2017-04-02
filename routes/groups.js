@@ -122,14 +122,14 @@ router.get('/:id/users', function (req, res) {
    })
 });
 
-// POST New User for Group (add User to Group)
-router.post('/:id/users/new', function (req, res) {
-    db.Group.findOne({ '_id': req.params.id }, function (err, group) {
+// GET Add User to Group
+router.get('/:groupId/users/new/:userId', function (req, res) {
+    db.Group.findOne({ '_id': req.params.groupId }, function (err, group) {
         if (err || group === null)
             res.status(400).send({ error: "Group not found" });
         else  {
             db.User.findOne({
-                '_id': req.body.id
+                '_id': req.params.userId
             }, function (err, user) {
                 if (err || user === null)
                     res.status(400).send({ error: "User not found "});

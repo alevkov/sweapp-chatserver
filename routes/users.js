@@ -5,6 +5,15 @@ var bcrypt = require('bcrypt');
 var ObjectId = require('mongodb').ObjectId;
 var _ = require('underscore');
 var nodemailer = require('nodemailer');
+var constants = require('../constants');
+
+var transporter = nodemailer.createTransport({
+    service: constants.emailDomain,
+    auth: {
+        user: constants.emailAddress,
+        pass: constants.emailPass
+    }
+});
 
 // GET all Users
 router.get('/', function(req, res, next) {
@@ -186,16 +195,32 @@ router.get('/:id/match', function (req, res) {
     });
 });
 
-router.post('/invite/:groupId', function (req, res) {
-    db.User.findOne({ _id: req.body._id }, function (err, user) {
+router.post('/invite/:userId/to/:groupId', function (req, res) {
+    // find receiver
+    // sender is POST body
+    db.User.findOne({ _id: req.params.userId}, function (err, user) {
         if (err || user === null)
             res.status(404).send({ error: "User not found" });
         else {
+            // find group
             db.Group.findOne({ _id: req.params.groupId }, function (err, group) {
                 if (err || group === null)
                     res.status(404).send({ error: "Group not found" });
                 else {
-
+                    var mailOptions = {
+                        from: constants.emailAddress,
+                        to: user.email,
+                        subject: constants.emailInvitationSubject + req.body.firstName,
+                        text: 'Hey ' + user.firstName + ', \n' + req.body.firstName + ' has invited your to join ' +
+                            'a study group! Please click the following link to accept the invitation:\n' +
+                            'http://localhost:3000/groups/' + group._id + '/users/new/' + user._id
+                    };
+                    transporter.sendMail(mailOptions, function(error, info) {
+                        if (error) {
+                            res.status(500).send({ error: error });
+                        }
+                        res.status(200).send(user);
+                });
                 }
             })
         }
