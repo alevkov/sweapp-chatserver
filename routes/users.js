@@ -105,7 +105,7 @@ router.delete('/:id', function (req, res) {
 });
 
 // GET Groups for User
-router.get('/:id/groups', function(req, res, next) {
+router.get('/:id/groups', function(req, res) {
     db.User.findOne({ '_id': ObjectId(req.params.id) }, function (err, user) {
         if (err || user === null)
             res.status(404).send({ error: "User not found" });
