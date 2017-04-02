@@ -4,6 +4,7 @@ var db = require('../db/db');
 var bcrypt = require('bcrypt');
 var ObjectId = require('mongodb').ObjectId;
 var _ = require('underscore');
+var nodemailer = require('nodemailer');
 
 // GET all Users
 router.get('/', function(req, res, next) {
@@ -181,6 +182,22 @@ router.get('/:id/match', function (req, res) {
                         })
                     }
                 });
+        }
+    });
+});
+
+router.post('/invite/:groupId', function (req, res) {
+    db.User.findOne({ _id: req.body._id }, function (err, user) {
+        if (err || user === null)
+            res.status(404).send({ error: "User not found" });
+        else {
+            db.Group.findOne({ _id: req.params.groupId }, function (err, group) {
+                if (err || group === null)
+                    res.status(404).send({ error: "Group not found" });
+                else {
+
+                }
+            })
         }
     });
 });
