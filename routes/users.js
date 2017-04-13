@@ -216,7 +216,7 @@ router.post('/invite/:userId/from/:sender', function (req, res) {
                         var mailOptions = {
                             from: constants.emailAddress,
                             to: user.email,
-                            subject: constants.emailInvitationSubject + req.body.firstName,
+                            subject: constants.emailInvitationSubject + req.params.sender,
                             text: 'Hey ' + user.firstName + ', \n' + req.params.sender + ' has invited your to join ' +
                                 'a study group! Please click the following link to accept the invitation:\n' +
                                 'http://localhost:3000/groups/' + groups[i]._id + '/users/new/' + user._id
