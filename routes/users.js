@@ -4,6 +4,16 @@ var db = require('../db/db');
 var bcrypt = require('bcrypt');
 var ObjectId = require('mongodb').ObjectId;
 var _ = require('underscore');
+var nodemailer = require('nodemailer');
+var constants = require('../constants');
+
+var transporter = nodemailer.createTransport({
+    service: constants.emailDomain,
+    auth: {
+        user: constants.emailAddress,
+        pass: constants.emailPass
+    }
+});
 
 // GET all Users
 router.get('/', function(req, res, next) {
@@ -183,6 +193,45 @@ router.get('/:id/match', function (req, res) {
                 });
         }
     });
+});
+
+router.post('/invite/:userId/from/:sender', function (req, res) {
+    // receiver id: userId, sender name: sender
+    db.User.findOne({ '_id': req.params.userId }, function (err, user) {
+        if (err || user === null)
+            res.status(404).send({ error: "Receiver not found" });
+        else {
+            // find groups invited to
+            var groupIds = _.values(req.body);
+            console.log(groupIds);
+            db.Group.find({
+                '_id': { $in: groupIds}
+            }, function (err, groups) {
+                if (err || groups === null)
+                    res.status(404).send({ error: "Groups not found" });
+                else {
+                    for (var i = 0; i < groups.length; i++) {
+                        var senderName = (req.params.sender === "" ||
+                                          req.params.sender === null) ? "Someone" : req.params.sender 
+                        var mailOptions = {
+                            from: constants.emailAddress,
+                            to: user.email,
+                            subject: constants.emailInvitationSubject + req.body.firstName,
+                            text: 'Hey ' + user.firstName + ', \n' + req.params.sender + ' has invited your to join ' +
+                                'a study group! Please click the following link to accept the invitation:\n' +
+                                'http://localhost:3000/groups/' + groups[i]._id + '/users/new/' + user._id
+                        };
+                        transporter.sendMail(mailOptions, function(error, info) {
+                            if (error) {
+                                res.status(500).send({ error: error });
+                            }
+                            res.status(200).send(user);
+                        }); 
+                    }
+                }
+            });
+        }
+    })
 });
 
 module.exports = router;

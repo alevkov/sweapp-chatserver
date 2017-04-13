@@ -29,5 +29,14 @@ define("ioRefreshMessages", "refreshMessages");
 define("ioDisconnect", "disconnect");
 define("ioTyping", "typing");
 
+// email
+define("emailDomain", "gmail");
+define("emailUser", "uniteam.api");
+define("emailPass", "mishka666");
+define("emailAddress", "uniteam.api@gmail.com");
+define("emailInvitationSubject", "Uniteam | Invitation from ");
+
+
+
 // Chat
 define("general", "general");
