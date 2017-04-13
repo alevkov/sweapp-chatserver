@@ -195,36 +195,43 @@ router.get('/:id/match', function (req, res) {
     });
 });
 
-router.post('/invite/:userId/to/:groupId', function (req, res) {
-    // find receiver
-    // sender is POST body
-    db.User.findOne({ _id: req.params.userId}, function (err, user) {
+router.post('/invite/:userId/from/:sender', function (req, res) {
+    // receiver id: userId, sender name: sender
+    db.User.findOne({ '_id': req.params.userId }, function (err, user) {
         if (err || user === null)
-            res.status(404).send({ error: "User not found" });
+            res.status(404).send({ error: "Receiver not found" });
         else {
-            // find group
-            db.Group.findOne({ _id: req.params.groupId }, function (err, group) {
-                if (err || group === null)
-                    res.status(404).send({ error: "Group not found" });
+            // find groups invited to
+            var groupIds = _.values(req.body);
+            console.log(groupIds);
+            db.Group.find({
+                '_id': { $in: groupIds}
+            }, function (err, groups) {
+                if (err || groups === null)
+                    res.status(404).send({ error: "Groups not found" });
                 else {
-                    var mailOptions = {
-                        from: constants.emailAddress,
-                        to: user.email,
-                        subject: constants.emailInvitationSubject + req.body.firstName,
-                        text: 'Hey ' + user.firstName + ', \n' + req.body.firstName + ' has invited your to join ' +
-                            'a study group! Please click the following link to accept the invitation:\n' +
-                            'http://localhost:3000/groups/' + group._id + '/users/new/' + user._id
-                    };
-                    transporter.sendMail(mailOptions, function(error, info) {
-                        if (error) {
-                            res.status(500).send({ error: error });
-                        }
-                        res.status(200).send(user);
-                });
+                    for (var i = 0; i < groups.length; i++) {
+                        var senderName = (req.params.sender === "" ||
+                                          req.params.sender === null) ? "Someone" : req.params.sender 
+                        var mailOptions = {
+                            from: constants.emailAddress,
+                            to: user.email,
+                            subject: constants.emailInvitationSubject + req.body.firstName,
+                            text: 'Hey ' + user.firstName + ', \n' + req.params.sender + ' has invited your to join ' +
+                                'a study group! Please click the following link to accept the invitation:\n' +
+                                'http://localhost:3000/groups/' + groups[i]._id + '/users/new/' + user._id
+                        };
+                        transporter.sendMail(mailOptions, function(error, info) {
+                            if (error) {
+                                res.status(500).send({ error: error });
+                            }
+                            res.status(200).send(user);
+                        }); 
+                    }
                 }
-            })
+            });
         }
-    });
+    })
 });
 
 module.exports = router;
