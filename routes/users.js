@@ -222,10 +222,10 @@ router.post('/invite/:userId/from/:sender', function (req, res) {
                                 'https://uniteam-api.herokuapp.com/groups/' + groups[i]._id + '/users/new/' + user._id
                         };
                         transporter.sendMail(mailOptions, function(error, info) {
-                            if (error) {
+                            if (error)
                                 res.status(500).send({ error: error });
-                            }
-                            res.status(200).send(user);
+                            else
+                                res.status(200).send(user);
                         }); 
                     }
                 }
