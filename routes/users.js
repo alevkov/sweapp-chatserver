@@ -219,7 +219,7 @@ router.post('/invite/:userId/from/:sender', function (req, res) {
                             subject: constants.emailInvitationSubject + req.params.sender,
                             text: 'Hey ' + user.firstName + ', \n' + req.params.sender + ' has invited your to join ' +
                                 'a study group! Please click the following link to accept the invitation:\n' +
-                                'http://localhost:3000/groups/' + groups[i]._id + '/users/new/' + user._id
+                                'https://uniteam-api.herokuapp.com/groups/' + groups[i]._id + '/users/new/' + user._id
                         };
                         transporter.sendMail(mailOptions, function(error, info) {
                             if (error) {

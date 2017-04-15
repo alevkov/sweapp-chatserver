@@ -36,7 +36,5 @@ define("emailPass", "mishka666");
 define("emailAddress", "uniteam.api@gmail.com");
 define("emailInvitationSubject", "Uniteam | Invitation from ");
 
-
-
 // Chat
 define("general", "general");
