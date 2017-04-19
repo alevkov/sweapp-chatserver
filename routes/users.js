@@ -16,7 +16,7 @@ var transporter = nodemailer.createTransport({
 });
 
 // GET all Users
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
     db.User.find(function (err, users) {
         if (err || users === null)
             res.status(404).send({ error: "No users found" });

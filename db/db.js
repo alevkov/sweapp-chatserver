@@ -133,7 +133,7 @@ UserSchema.post('remove', function (next) {
 });
 
 // Group middleware
-GroupSchema.post('remove', function (next) {
+GroupSchema.pre('remove', function (next) {
     var group = this;
     var UserModel = mongoose.model('User', UserSchema);
     var ChatModel = mongoose.model('Chat', ChatSchema);
