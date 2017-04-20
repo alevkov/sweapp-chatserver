@@ -94,6 +94,17 @@ var GroupSchema = mongoose.Schema({
     days: [String]
 });
 
+var EventSchema = mongoose.Schema({
+  name: String,
+  description: String,
+  dueDate: Date,
+  completed: Boolean,
+  groupId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group'
+  }
+});
+
 // User middleware
 UserSchema.pre('save', function(next) {
     var user = this;
@@ -195,11 +206,13 @@ module.exports.startDB = function (io) {
         var Group = mongoose.model('Group', GroupSchema);
         var Chat = mongoose.model('Chat', ChatSchema);
         var Message = mongoose.model('Message', MessageSchema);
+        var Event = mongoose.model('Event', EventSchema);
         module.exports.User = User;
         module.exports.Course = Course;
         module.exports.Group = Group;
         module.exports.Chat = Chat;
         module.exports.Message = Message;
+        module.exports.Event = Event;
     });
     return db;
 };
