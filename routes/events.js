@@ -33,7 +33,7 @@ router.post('/group/:groupId/new', function(req, res) {
 });
 
 // PATCH an event
-router.patch('/:id', function(req, res) {
+router.patch('/:id/update', function(req, res) {
   db.Event.findOne({ '_id': ObjectId(req.params.id) }, function (err, event) {
     if (err || event === null)
       res.status(400).send({ error: "No event found for Id" });
