@@ -4,7 +4,7 @@ var db = require('../db/db');
 var ObjectId = require('mongodb').ObjectId;
 
 // GET all Events for a Group
-router.get('/:groupId', function(req, res) {
+router.get('/group/:groupId', function(req, res) {
   db.Event.find({ 'groupId': ObjectId(req.params.groupId) }, function (err, events) {
     if (err || events === null)
       res.status(400).send([]);
@@ -14,7 +14,7 @@ router.get('/:groupId', function(req, res) {
 });
 
 // POST a new event for a Group
-router.post('/:groupId/new', function(req, res) {
+router.post('/group/:groupId/new', function(req, res) {
   var event = db.Event();
   event.name = req.body.name;
   event.description = req.body.description;
