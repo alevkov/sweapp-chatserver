@@ -149,12 +149,20 @@ GroupSchema.pre('remove', function (next) {
     var UserModel = mongoose.model('User', UserSchema);
     var ChatModel = mongoose.model('Chat', ChatSchema);
     // remove each chat for deleted group
-    ChatModel.find({ 'group': group.id }, function (err,chats) {
+    ChatModel.find({ 'group': group.id }, function (err, chats) {
         if (err || chats === null)
             next();
         else {
             for (var i = 0; i < chats.length; i++)
                 chats[i].remove();
+        }
+    });
+    EventModel.find({ 'group': group.id }, function (err, events) {
+        if (err || events === null)
+            return;
+        else {
+            for (var i = 0; i < events.length; i++)
+                events[i].remove();
         }
     });
     // remove group ref from participants
