@@ -99,7 +99,7 @@ var EventSchema = mongoose.Schema({
   description: String,
   dueDate: Date,
   completed: Boolean,
-  groupId: {
+  group: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Group'
   }
