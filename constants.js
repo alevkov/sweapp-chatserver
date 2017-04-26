@@ -28,6 +28,8 @@ define("ioNewMessage", "newMessage");
 define("ioRefreshMessages", "refreshMessages");
 define("ioDisconnect", "disconnect");
 define("ioTyping", "typing");
+define("ioEventReminder", "reminder");
+define("ioReminderFrequency", 10000);
 
 // email
 define("emailDomain", "gmail");

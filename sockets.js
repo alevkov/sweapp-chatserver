@@ -12,8 +12,9 @@ module.exports.listen = function (app) {
     io = socketio(app);
     io.on(constants.ioConnection, function (socket) {
         console.log(socket.id + " connected");
-        socket.on(constants.ioUserJoined, function (user) {
-            console.log(JSON.parse(user));
+        socket.on(constants.ioUserJoined, function (user, group) {
+            //console.log(JSON.parse(user));
+            socket.join(group);
             users[socket.id] = JSON.parse(user);
             io.sockets.emit(constants.ioUpdateJoin, users[socket.id]);
             io.sockets.emit(constants.ioUpdateUsers, users);
@@ -47,6 +48,5 @@ module.exports.listen = function (app) {
             console.log(socket.id + "is typing");
         })
     });
-
-    return io
+    return io;
 };

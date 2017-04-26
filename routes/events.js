@@ -20,7 +20,7 @@ router.post('/group/:groupId/new', function(req, res) {
   event.description = req.body.description;
   event.dueDate = new Date(req.body.dueDate);
   event.completed = false;
-  event.groupId = ObjectId(req.params.groupId);
+  event.group = ObjectId(req.body.group);
   event.save(function (err, event) {
     if (err || event === null) {
       res.status(500).send({error: "Error saving event to DB"});
