@@ -221,28 +221,6 @@ module.exports.startDB = function (io) {
         module.exports.Chat = Chat;
         module.exports.Message = Message;
         module.exports.Event = Event;
-        // Emitting Reminders
-        // Definitely could be improved (e.g. setting custom frequency of emitting)
-        var reminderJob = function () {
-            var done = function() {
-                setTimeout(function () {
-                    reminderJob();
-                }, constants.ioReminderFrequency);
-            }
-            Event.find( { dueDate: { $gte: new Date() } }, function (err, events) {
-                if (err || events === null)
-                    done();
-                else {
-                    for (var i = 0; i < events.length; i++) {
-                        console.log(io.sockets.adapter.rooms);
-                        io.sockets.in(events[i].group).emit(constants.ioEventReminder, events[i]);
-                        console.log("emitting:\n" + events[i]);
-                    }
-                    done();
-                }
-            });
-        }
-        reminderJob();
     });
     return db;
 };

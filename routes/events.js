@@ -5,8 +5,11 @@ var ObjectId = require('mongodb').ObjectId;
 
 // GET all Events for a Group
 router.get('/group/:groupId', function(req, res) {
-  db.Event.find({ 'groupId': ObjectId(req.params.groupId) }, function (err, events) {
-    if (err || events === null)
+  db.Event.find({ 
+    'group': ObjectId(req.params.groupId),
+    'completed': false
+  }, function (err, events) {
+    if (err || events === null || events.length === 0)
       res.status(400).send([]);
     else
       res.status(200).send(events);
