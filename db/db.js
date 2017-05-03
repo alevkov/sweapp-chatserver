@@ -148,6 +148,7 @@ GroupSchema.pre('remove', function (next) {
     var group = this;
     var UserModel = mongoose.model('User', UserSchema);
     var ChatModel = mongoose.model('Chat', ChatSchema);
+    var EventModel = mongoose.model('Event', EventSchema);
     // remove each chat for deleted group
     ChatModel.find({ 'group': group.id }, function (err, chats) {
         if (err || chats === null)
